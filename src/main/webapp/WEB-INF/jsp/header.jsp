@@ -59,6 +59,9 @@
                 <a href="<%= request.getContextPath() %>/view/users.jsp" class="nav-link"><i class="fa-solid fa-users me-2"></i>Usuarios</a>
             </li>
             <li class="nav-item">
+                <a href="<%= request.getContextPath() %>/view/admin-users.jsp" class="nav-link"><i class="fa-solid fa-user-shield me-2"></i>Admins</a>
+            </li>
+            <li class="nav-item">
                 <a href="<%= request.getContextPath() %>/view/loans.jsp" class="nav-link"><i class="fa-solid fa-scroll me-2"></i>Prestamos</a>
             </li>
         </ul>
@@ -87,6 +90,9 @@
             </li>
             <li class="nav-item">
                 <a href="<%= request.getContextPath() %>/view/users.jsp" class="nav-link text-white"><i class="fa-solid fa-users me-2"></i>Usuarios</a>
+            </li>
+            <li class="nav-item">
+                <a href="<%= request.getContextPath() %>/view/admin-users.jsp" class="nav-link text-white"><i class="fa-solid fa-user-shield me-2"></i>Admins</a>
             </li>
             <li class="nav-item">
                 <a href="<%= request.getContextPath() %>/view/loans.jsp" class="nav-link text-white"><i class="fa-solid fa-scroll me-2"></i>Prestamos</a>

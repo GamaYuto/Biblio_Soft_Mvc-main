@@ -6,7 +6,7 @@
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h2 class="card-title">Dashboard</h2>
-                    <p class="card-text">Bienvenido al panel de control de BiblioSoft. Usa el menú de la izquierda para gestionar Autores, Libros, Usuarios y Préstamos.</p>
+                    <p class="card-text">Bienvenido al panel de control de BiblioSoft. Usa el menu de la izquierda para gestionar autores, libros, usuarios, administradores y prestamos.</p>
                     <div class="row gx-3">
                         <div class="col-md-3 mb-3">
                             <div class="card border-primary h-100">
@@ -38,9 +38,18 @@
                         <div class="col-md-3 mb-3">
                             <div class="card border-info h-100">
                                 <div class="card-body">
-                                    <h5 class="card-title"><i class="fa-solid fa-scroll me-2"></i>Préstamos</h5>
-                                    <p class="card-text">Registrar préstamos y ver historial.</p>
-                                    <a href="view/loans.jsp" class="btn btn-info btn-sm text-white">Ir a Préstamos</a>
+                                    <h5 class="card-title"><i class="fa-solid fa-user-shield me-2"></i>Administradores</h5>
+                                    <p class="card-text">Crear y mantener accesos del panel.</p>
+                                    <a href="view/admin-users.jsp" class="btn btn-info btn-sm text-white">Ir a Admins</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card border-dark h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fa-solid fa-scroll me-2"></i>Prestamos</h5>
+                                    <p class="card-text">Registrar prestamos y ver historial.</p>
+                                    <a href="view/loans.jsp" class="btn btn-dark btn-sm">Ir a Prestamos</a>
                                 </div>
                             </div>
                         </div>
