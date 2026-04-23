@@ -1,4 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="com.mycompany.biblio_soft_mvc.model.AdminUser" %>
+<%@ page import="com.mycompany.biblio_soft_mvc.servlet.LoginServlet" %>
+<%
+    AdminUser adminUser = (AdminUser) session.getAttribute(LoginServlet.SESSION_ADMIN_USER);
+    String displayName = adminUser != null && adminUser.getFullName() != null && !adminUser.getFullName().isBlank()
+            ? adminUser.getFullName()
+            : adminUser != null ? adminUser.getUsername() : "Invitado";
+%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -17,6 +25,8 @@
         .sidebar a { color: rgba(255,255,255,.8); text-decoration: none; }
         .sidebar a.active, .sidebar a:hover { color: white; background-color: rgba(255,255,255,.08); border-radius: .375rem; }
         .sidebar .nav-link { padding: .75rem 1.25rem; }
+        .sidebar .logout-link, .offcanvas-sidebar .logout-link { color: #fca5a5; }
+        .sidebar .logout-link:hover, .offcanvas-sidebar .logout-link:hover { color: #fff; background-color: rgba(239,68,68,.18); }
         .offcanvas-sidebar { background: #1f2937 !important; }
         .offcanvas-sidebar .nav-link { color: rgba(255,255,255,.8); padding: .75rem 1.25rem; }
         .offcanvas-sidebar .nav-link:hover { color: white; background-color: rgba(255,255,255,.08); border-radius: .375rem; }
@@ -27,7 +37,6 @@
 </head>
 <body>
 
-<!-- Offcanvas sidebar (móvil / tablet) -->
 <div class="offcanvas offcanvas-start offcanvas-sidebar" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
     <div class="offcanvas-header border-bottom border-secondary">
         <span class="fs-5 fw-semibold text-white" id="mobileSidebarLabel">
@@ -35,7 +44,7 @@
         </span>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
     </div>
-    <div class="offcanvas-body p-3">
+    <div class="offcanvas-body p-3 d-flex flex-column">
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item">
                 <a href="<%= request.getContextPath() %>/index.jsp" class="nav-link"><i class="fa-solid fa-house me-2"></i>Inicio</a>
@@ -50,14 +59,17 @@
                 <a href="<%= request.getContextPath() %>/view/users.jsp" class="nav-link"><i class="fa-solid fa-users me-2"></i>Usuarios</a>
             </li>
             <li class="nav-item">
-                <a href="<%= request.getContextPath() %>/view/loans.jsp" class="nav-link"><i class="fa-solid fa-scroll me-2"></i>Préstamos</a>
+                <a href="<%= request.getContextPath() %>/view/loans.jsp" class="nav-link"><i class="fa-solid fa-scroll me-2"></i>Prestamos</a>
             </li>
         </ul>
+        <div class="pt-3 border-top border-secondary mt-3">
+            <div class="small text-white-50 px-3 mb-2"><i class="fa-solid fa-user-shield me-2"></i><%= displayName %></div>
+            <a href="<%= request.getContextPath() %>/logout" class="nav-link logout-link"><i class="fa-solid fa-right-from-bracket me-2"></i>Cerrar sesion</a>
+        </div>
     </div>
 </div>
 
 <div class="d-flex app-layout">
-    <!-- Sidebar fijo (escritorio ≥ md) -->
     <nav class="sidebar p-3 d-none d-md-flex flex-column">
         <a href="<%= request.getContextPath() %>/index.jsp" class="d-flex align-items-center mb-3 text-white text-decoration-none">
             <span class="fs-5 fw-semibold"><i class="fa-solid fa-book-open-reader me-2"></i>BiblioSoft</span>
@@ -77,19 +89,22 @@
                 <a href="<%= request.getContextPath() %>/view/users.jsp" class="nav-link text-white"><i class="fa-solid fa-users me-2"></i>Usuarios</a>
             </li>
             <li class="nav-item">
-                <a href="<%= request.getContextPath() %>/view/loans.jsp" class="nav-link text-white"><i class="fa-solid fa-scroll me-2"></i>Préstamos</a>
+                <a href="<%= request.getContextPath() %>/view/loans.jsp" class="nav-link text-white"><i class="fa-solid fa-scroll me-2"></i>Prestamos</a>
             </li>
         </ul>
+        <hr class="border-secondary">
+        <div class="mt-auto">
+            <div class="small text-white-50 px-3 mb-2"><i class="fa-solid fa-user-shield me-2"></i><%= displayName %></div>
+            <a href="<%= request.getContextPath() %>/logout" class="nav-link logout-link text-white"><i class="fa-solid fa-right-from-bracket me-2"></i>Cerrar sesion</a>
+        </div>
     </nav>
 
-    <!-- Área de contenido principal -->
     <div class="flex-grow-1 overflow-hidden">
         <header class="bg-white border-bottom py-3 px-3 px-md-4 d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center gap-2 gap-md-3">
-                <!-- Botón hamburguesa (solo móvil/tablet) -->
                 <button class="btn btn-outline-secondary d-md-none" type="button"
                         data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar"
-                        aria-controls="mobileSidebar" aria-label="Abrir menú">
+                        aria-controls="mobileSidebar" aria-label="Abrir menu">
                     <i class="fa-solid fa-bars"></i>
                 </button>
                 <div>
@@ -98,7 +113,7 @@
                 </div>
             </div>
             <div class="text-end">
-                <span class="badge bg-primary">Bienvenido</span>
+                <span class="badge bg-primary">Bienvenido, <%= displayName %></span>
             </div>
         </header>
         <main class="content-wrapper">
