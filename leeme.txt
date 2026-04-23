@@ -1,0 +1,526 @@
+ Proyecto Backend: Sistema de Biblioteca Java MVC – NetBeans
+Diseñar backend para:
+
+Sistema de biblioteca
+
+Entidades:
+
+User
+Book
+Loan
+Author
+
+Relaciones:
+
+User 1---* Loan
+Book 1---* Loan
+Author 1---* Book
+
+ 
+1. Análisis del Sistema
+
+El sistema permitirá administrar una biblioteca.
+
+Funciones principales:
+
+    Registrar usuarios
+
+    Registrar autores
+
+    Registrar libros
+
+    Registrar préstamos
+
+    Consultar información
+
+Entidades del sistema
+
+Las entidades principales son:
+
+    User
+
+    Book
+
+    Loan
+
+    Author
+
+Relaciones
+
+Relaciones del modelo:
+
+
+ 
+
+User 1 ----- * Loan
+Book 1 ----- * Loan
+Author 1 ----- * Book
+
+Interpretación:
+
+    Un usuario puede tener muchos préstamos
+
+    Un libro puede tener muchos préstamos
+
+    Un autor puede tener muchos libros
+
+2. Arquitectura MVC
+
+MVC significa:
+
+    Model
+
+    View
+
+    Controller
+
+Arquitectura:
+
+
+ 
+
+Usuario
+|
+| interacción
+v
+View (Interfaz)
+|
+v
+Controller
+|
+v
+Model
+|
+v
+Base de Datos
+Model
+
+Representa los datos del sistema.
+
+Ejemplo:
+
+
+ 
+
+User
+Book
+Author
+Loan
+Controller
+
+Controla la lógica de la aplicación.
+
+Ejemplo:
+
+
+ 
+
+UserController
+BookController
+LoanController
+AuthorController
+View
+
+Interfaz con el usuario.
+
+Puede ser:
+
+    JSP
+
+    Swing
+
+    HTML
+
+3. Diagrama Entidad-Relación
+
+Modelo conceptual del sistema:
+
+
+ 
+
+User
+-----
+id_user
+name
+email
+phone
+
+Author
+------
+id_author
+name
+nationality
+
+Book
+----
+id_book
+title
+isbn
+year
+id_author
+
+Loan
+----
+id_loan
+loan_date
+return_date
+id_user
+id_book
+Relaciones
+
+
+ 
+
+Author 1 ----- * Book
+Book 1 ----- * Loan
+User 1 ----- * Loan
+4. Modelo Relacional
+Tabla Users
+
+
+ 
+
+CREATE TABLE users (
+id_user INT PRIMARY KEY AUTO_INCREMENT,
+name VARCHAR(100),
+email VARCHAR(100),
+phone VARCHAR(20)
+);
+Tabla Authors
+
+
+ 
+
+CREATE TABLE authors (
+id_author INT PRIMARY KEY AUTO_INCREMENT,
+name VARCHAR(100),
+nationality VARCHAR(50)
+);
+Tabla Books
+
+
+ 
+
+CREATE TABLE books (
+id_book INT PRIMARY KEY AUTO_INCREMENT,
+title VARCHAR(150),
+isbn VARCHAR(20),
+year INT,
+id_author INT,
+FOREIGN KEY (id_author) REFERENCES authors(id_author)
+);
+Tabla Loans
+
+
+ 
+
+CREATE TABLE loans (
+id_loan INT PRIMARY KEY AUTO_INCREMENT,
+loan_date DATE,
+return_date DATE,
+id_user INT,
+id_book INT,
+FOREIGN KEY (id_user) REFERENCES users(id_user),
+FOREIGN KEY (id_book) REFERENCES books(id_book)
+);
+5. Diagrama de Clases UML
+
+
+ 
+
++----------------+
+| User |
++----------------+
+| idUser |
+| name |
+| email |
+| phone |
++----------------+
+
++----------------+
+| Author |
++----------------+
+| idAuthor |
+| name |
+| nationality |
++----------------+
+
++----------------+
+| Book |
++----------------+
+| idBook |
+| title |
+| isbn |
+| year |
+| author |
++----------------+
+
++----------------+
+| Loan |
++----------------+
+| idLoan |
+| loanDate |
+| returnDate |
+| user |
+| book |
++----------------+
+6. Estructura del Proyecto en NetBeans
+
+Organización recomendada:
+
+
+ 
+
+LibrarySystem
+│
+├── controller
+│ ├── UserController.java
+│ ├── BookController.java
+│ ├── LoanController.java
+│ └── AuthorController.java
+│
+├── model
+│ ├── User.java
+│ ├── Book.java
+│ ├── Author.java
+│ └── Loan.java
+│
+├── dao
+│ ├── UserDAO.java
+│ ├── BookDAO.java
+│ ├── AuthorDAO.java
+│ └── LoanDAO.java
+│
+├── database
+│ └── ConnectionDB.java
+│
+└── view
+└── interfaz
+7. Conexión a Base de Datos
+
+Clase de conexión:
+
+
+ 
+
+package database;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class ConnectionDB {
+
+private static final String URL = "jdbc:mysql://localhost:3306/library";
+private static final String USER = "root";
+private static final String PASSWORD = "";
+
+public static Connection connect() {
+
+Connection conn = null;
+
+try {
+
+conn = DriverManager.getConnection(URL, USER, PASSWORD);
+
+} catch (Exception e) {
+
+System.out.println("Error de conexión: " + e);
+
+}
+
+return conn;
+
+}
+
+}
+8. Modelo: Clase User
+
+
+ 
+
+package model;
+
+public class User {
+
+private int idUser;
+private String name;
+private String email;
+private String phone;
+
+public User() {}
+
+public User(int idUser, String name, String email, String phone) {
+this.idUser = idUser;
+this.name = name;
+this.email = email;
+this.phone = phone;
+}
+
+public int getIdUser() {
+return idUser;
+}
+
+public void setIdUser(int idUser) {
+this.idUser = idUser;
+}
+
+public String getName() {
+return name;
+}
+
+public void setName(String name) {
+this.name = name;
+}
+
+}
+9. DAO (Data Access Object)
+
+Clase que maneja consultas SQL.
+UserDAO
+
+
+ 
+
+package dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import model.User;
+import database.ConnectionDB;
+
+public class UserDAO {
+
+public void addUser(User user){
+
+try{
+
+Connection conn = ConnectionDB.connect();
+
+String sql = "INSERT INTO users(name,email,phone) VALUES(?,?,?)";
+
+PreparedStatement ps = conn.prepareStatement(sql);
+
+ps.setString(1,user.getName());
+ps.setString(2,user.getEmail());
+ps.setString(3,user.getPhone());
+
+ps.executeUpdate();
+
+}catch(Exception e){
+
+System.out.println(e);
+
+}
+
+}
+
+}
+10. Controller
+
+Ejemplo:
+UserController
+
+
+ 
+
+package controller;
+
+import dao.UserDAO;
+import model.User;
+
+public class UserController {
+
+UserDAO dao = new UserDAO();
+
+public void createUser(String name,String email,String phone){
+
+User user = new User();
+
+user.setName(name);
+user.setEmail(email);
+user.setPhone(phone);
+
+dao.addUser(user);
+
+}
+
+}
+11. Flujo del Sistema
+
+Ejemplo registrar usuario:
+
+
+ 
+
+View
+↓
+UserController
+↓
+UserDAO
+↓
+Database
+12. Ejemplo Registro de Préstamo
+
+Proceso:
+
+
+ 
+
+Usuario solicita libro
+↓
+Sistema registra préstamo
+↓
+Se guarda en tabla LOANS
+↓
+Se registra fecha préstamo
+13. Ejemplo SQL
+
+Insertar préstamo:
+
+
+ 
+
+INSERT INTO loans(loan_date,return_date,id_user,id_book)
+VALUES('2026-03-10','2026-03-20',1,3);
+
+14. Funcionalidades del Sistema, cada una debe ser probada
+Usuarios
+
+    registrar usuario
+
+    listar usuarios
+
+    eliminar usuario
+
+Libros
+
+    registrar libro
+
+    buscar libro
+
+    listar libros
+
+Autores
+
+    registrar autor
+
+    listar autores
+
+Préstamos
+
+    registrar préstamo
+
+    devolver libro
+
+    historial de préstamos
+
+ 
+15. Crear servicios para probar
+
+Implementar:
+
+1. Registrar autor
+2. Registrar libro
+3. Registrar préstamo
+4. Listar préstamos activos
+

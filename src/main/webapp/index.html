@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=index.jsp">
+    <title>Redirigiendo...</title>
+</head>
+<body>
+    <p>Redirigiendo al tablero principal...</p>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiblioSoft - Dashboard de Pruebas</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --success: #27ae60;
+            --danger: #e74c3c;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
+            margin: 0;
+            display: flex;
+            color: var(--primary);
+        }
+
+        /* Sidebar */
+        nav {
+            width: 260px;
+            background: linear-gradient(180deg, #1f2d3d 0%, #273748 100%);
+            height: 100vh;
+            color: white;
+            padding: 30px 24px;
+            position: fixed;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        nav h1 {
+            font-size: 1.6rem;
+            margin: 0 0 24px;
+            letter-spacing: 0.03em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav h1::before {
+            content: '📚';
+            font-size: 1.5rem;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        nav li {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 14px 16px;
+            cursor: pointer;
+            border-radius: 14px;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+            border: 1px solid transparent;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        nav li:hover {
+            background: rgba(255,255,255,0.08);
+            color: var(--accent);
+            transform: translateX(2px);
+        }
+
+        nav li.active {
+            background: rgba(255,255,255,0.15);
+            color: var(--accent);
+            border-color: rgba(255,255,255,0.18);
+        }
+
+        nav li::before {
+            content: attr(data-icon);
+            margin-right: 12px;
+            font-size: 1.1rem;
+            opacity: 0.9;
+            width: 18px;
+            text-align: center;
+        }
+
+        nav li:last-child {
+            margin-bottom: 0;
+        }
+
+        nav .sidebar-foot {
+            margin-top: auto;
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Main Content */
+        main {
+            margin-left: 290px;
+            padding: 40px;
+            width: 100%;
+        }
+
+        .section { display: none; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .section.active { display: block; }
+
+        h2 { border-left: 5px solid var(--accent); padding-left: 15px; margin-top: 0; }
+
+        /* Forms */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        
+        button {
+            background-color: var(--accent);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+        button:hover { background-color: #2980b9; }
+
+        .action-button {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid transparent;
+            padding: 6px 8px;
+            min-width: 34px;
+            min-height: 34px;
+            border-radius: 6px;
+            font-size: 1rem;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, color 0.2s;
+        }
+        .action-button:hover {
+            background: rgba(52, 152, 219, 0.12);
+            color: var(--accent);
+        }
+        .action-button.delete {
+            color: #c0392b;
+        }
+        .action-button.delete:hover {
+            background: rgba(192, 57, 43, 0.12);
+        }
+        .action-button.edit {
+            color: #2c3e50;
+        }
+        .action-button.edit:hover {
+            background: rgba(44, 62, 80, 0.1);
+        }
+
+        /* Tables */
+        .table-container {
+            max-height: 420px;
+            overflow-y: auto;
+            margin-top: 20px;
+            border: 1px solid #e7e7e7;
+            border-radius: 8px;
+            background: #fff;
+        }
+        table { width: 100%; border-collapse: collapse; min-width: 650px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+        th { background-color: #f8f9fa; position: sticky; top: 0; z-index: 1; }
+        .pagination {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0 0;
+        }
+        .pagination button {
+            background: #fff;
+            border: 1px solid #ddd;
+            color: var(--primary);
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .pagination button.active,
+        .pagination button:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 4px;
+            color: white;
+            display: none;
+            z-index: 1000;
+        }
+        .welcome-actions {
+            display:flex;
+            gap:12px;
+            flex-wrap:wrap;
+            margin-top:20px;
+        }
+        .view-link {
+            padding:12px 18px;
+            background:#3498db;
+            color:white;
+            border-radius:8px;
+            text-decoration:none;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+        }
+        .secondary-button {
+            display:none;
+            margin-left:8px;
+            background:#e74c3c;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <h1>BiblioSoft MVC</h1>
+        <ul>
+            <li data-icon="👤" onclick="showSection('authors')">Autores</li>
+            <li data-icon="📚" onclick="showSection('books')">Libros</li>
+            <li data-icon="�" onclick="showSection('users')">Usuarios</li>
+            <li data-icon="�📝" onclick="showSection('loans')">Préstamos</li>
+        </ul>
+    </nav>
+
+    <main>
+        <div id="welcome" class="section active">
+            <h2>Bienvenido a BiblioSoft MVC</h2>
+            <p>Usa las siguientes páginas JSP para gestionar el sistema en modo MVC completo:</p>
+            <div class="welcome-actions">
+                <a class="view-link" href="view/authors.jsp">Autores</a>
+                <a class="view-link" href="view/books.jsp">Libros</a>
+                <a class="view-link" href="view/users.jsp">Usuarios</a>
+                <a class="view-link" href="view/loans.jsp">Préstamos</a>
+            </div>
+        </div>
+
+        <!-- Sección Autores -->
+        <div id="authors" class="section">
+            <h2>Gestión de Autores</h2>
+            <form id="authorForm">
+                <input type="hidden" id="authId">
+                <div class="form-group">
+                    <label>Nombre del Autor</label>
+                    <input type="text" id="authName" required placeholder="Ej: Gabriel García Márquez">
+                </div>
+                <div class="form-group">
+                    <label>Nacionalidad</label>
+                    <input type="text" id="authNat" required placeholder="Ej: Colombiano">
+                </div>
+                <button type="submit" id="authorSubmitButton">Registrar Autor</button>
+                <button type="button" id="authorCancelButton" class="secondary-button">Cancelar</button>
+            </form>
+            <div class="table-container">
+                <table id="authorTable">
+                    <thead><tr><th>ID</th><th>Nombre</th><th>Nacionalidad</th><th>Acciones</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="pagination" id="authorPagination"></div>
+        </div>
+
+        <!-- Sección Libros -->
+        <div id="books" class="section">
+            <h2>Gestión de Libros</h2>
+            <form id="bookForm">
+                <input type="hidden" id="bookId">
+                <div class="form-group">
+                    <label>Título</label>
+                    <input type="text" id="bookTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>ISBN</label>
+                    <input type="text" id="bookIsbn" required>
+                </div>
+                <div class="form-group">
+                    <label>Año</label>
+                    <input type="number" id="bookYear" required>
+                </div>
+                <div class="form-group">
+                    <label>Autor</label>
+                    <select id="bookAuthor" required></select>
+                </div>
+                <button type="submit" id="bookSubmitButton">Registrar Libro</button>
+                <button type="button" id="bookCancelButton" class="secondary-button">Cancelar</button>
+            </form>
+        <div class="table-container">
+            <table id="bookTable">
+                <thead><tr><th>ID</th><th>Título</th><th>ISBN</th><th>Año</th><th>Autor</th><th>Acciones</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="pagination" id="bookPagination"></div>
+        </div>
+
+        <div id="users" class="section">
+            <h2>Gestión de Usuarios</h2>
+            <form id="userForm">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" id="userName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="userEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input type="text" id="userPhone" required>
+                </div>
+                <button type="submit" id="userSubmitButton">Registrar Usuario</button>
+            </form>
+            <div class="table-container">
+                <table id="userTable">
+                    <thead><tr><th>ID</th><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Acciones</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="pagination" id="userPagination"></div>
+        </div>
+
+        <div id="loans" class="section">
+            <h2>Gestión de Préstamos</h2>
+            <form id="loanForm">
+                <div class="form-group">
+                    <label>Usuario</label>
+                    <select id="loanUser" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Libro</label>
+                    <select id="loanBook" required></select>
+                </div>
+                <button type="submit">Registrar Préstamo</button>
+            </form>
+            <div class="table-container">
+                <table id="loanTable">
+                    <thead><tr><th>ID</th><th>Usuario</th><th>Libro</th><th>Fecha Préstamo</th><th>Fecha Devolución</th><th>Acciones</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="pagination" id="loanPagination"></div>
+        </div>
+    </main>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        const API_BASE = "resources";
+        const ITEMS_PER_PAGE = 10;
+        let authorsData = [];
+        let currentAuthorPage = 1;
+        let booksData = [];
+        let currentBookPage = 1;
+        let usersData = [];
+        let currentUserPage = 1;
+        let loansData = [];
+        let currentLoanPage = 1;
+
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if (id === 'authors') loadAuthors();
+            if (id === 'books') {
+                loadAuthorsSelect();
+                loadBooks();
+            }
+            if (id === 'users') loadUsers();
+            if (id === 'loans') {
+                loadUsersSelect();
+                loadAuthorsSelect();
+                loadBooks();
+                loadLoans();
+            }
+        }
+
+        function notify(msg, type='success') {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.style.backgroundColor = type === 'success' ? '#27ae60' : '#e74c3c';
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 3000);
+        }
+
+        function renderPagination(containerId, totalItems, currentPage, onPageChange) {
+            const container = document.getElementById(containerId);
+            const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
+            let buttons = '';
+            for (let page = 1; page <= totalPages; page++) {
+                buttons += `<button class="${page === currentPage ? 'active' : ''}" onclick="${onPageChange}(${page})">${page}</button>`;
+            }
+            container.innerHTML = buttons;
+        }
+
+        function renderAuthorsPage(page) {
+            const start = (page - 1) * ITEMS_PER_PAGE;
+            const pageAuthors = authorsData.slice(start, start + ITEMS_PER_PAGE);
+            const tbody = document.querySelector('#authorTable tbody');
+            tbody.innerHTML = pageAuthors.map(a => `
+                <tr>
+                    <td>${a.idAuthor}</td>
+                    <td>${a.name}</td>
+                    <td>${a.nationality}</td>
+                    <td>
+                        <button class="action-button edit" title="Editar" onclick="startEditAuthor(${a.idAuthor})">✏️</button>
+                        <button class="action-button delete" title="Eliminar" onclick="deleteAuthor(${a.idAuthor})">🗑️</button>
+                    </td>
+                </tr>
+            `).join('');
+            currentAuthorPage = page;
+            renderPagination('authorPagination', authorsData.length, page, 'changeAuthorPage');
+        }
+
+        function changeAuthorPage(page) {
+            renderAuthorsPage(page);
+        }
+
+        async function loadAuthors() {
+            const resp = await fetch(`${API_BASE}/authors`);
+            if (!resp.ok) {
+                const errorText = await resp.text();
+                notify(errorText || 'Error al cargar autores', 'error');
+                return;
+            }
+            authorsData = await resp.json();
+            renderAuthorsPage(1);
+        }
+
+        function resetAuthorForm() {
+            document.getElementById('authId').value = '';
+            document.getElementById('authName').value = '';
+            document.getElementById('authNat').value = '';
+            document.getElementById('authorSubmitButton').innerText = 'Registrar Autor';
+            document.getElementById('authorCancelButton').style.display = 'none';
+        }
+
+        async function startEditAuthor(authorId) {
+            const author = authorsData.find(a => a.idAuthor === authorId);
+            if (!author) return;
+            document.getElementById('authId').value = author.idAuthor;
+            document.getElementById('authName').value = author.name;
+            document.getElementById('authNat').value = author.nationality || '';
+            document.getElementById('authorSubmitButton').innerText = 'Guardar cambios';
+            document.getElementById('authorCancelButton').style.display = 'inline-block';
+        }
+
+        async function deleteAuthor(authorId) {
+            if (!confirm('¿Deseas eliminar este autor?')) return;
+            const resp = await fetch(`${API_BASE}/authors?id=${authorId}`, {
+                method: 'DELETE'
+            });
+            if (resp.ok) {
+                notify('Autor eliminado correctamente');
+                if (document.getElementById('authId').value == authorId) resetAuthorForm();
+                loadAuthors();
+            } else {
+                const errorText = await resp.text();
+                notify(errorText || 'Error al eliminar autor', 'error');
+            }
+        }
+
+        document.getElementById('authorCancelButton').onclick = () => resetAuthorForm();
+
+        document.getElementById('authorForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const authorId = document.getElementById('authId').value;
+            const data = {
+                idAuthor: authorId ? parseInt(authorId) : undefined,
+                name: document.getElementById('authName').value,
+                nationality: document.getElementById('authNat').value
+            };
+            const method = authorId ? 'PUT' : 'POST';
+            const resp = await fetch(`${API_BASE}/authors`, {
+                method,
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+            if (resp.ok) {
+                notify(authorId ? 'Autor actualizado con éxito' : 'Autor registrado con éxito');
+                resetAuthorForm();
+                loadAuthors();
+            } else {
+                const errorText = await resp.text();
+                notify(errorText || (authorId ? 'Error al actualizar autor' : 'Error al registrar autor'), 'error');
+            }
+        };
+
+        function renderBooksPage(page) {
+            const start = (page - 1) * ITEMS_PER_PAGE;
+            const pageBooks = booksData.slice(start, start + ITEMS_PER_PAGE);
+            const tbody = document.querySelector('#bookTable tbody');
+            tbody.innerHTML = pageBooks.map(b => `
+                <tr>
+                    <td>${b.idBook}</td>
+                    <td>${b.title}</td>
+                    <td>${b.isbn}</td>
+                    <td>${b.year}</td>
+                    <td>${b.author?.name || ''}</td>
+                    <td>
+                        <button class="action-button edit" title="Editar" onclick="startEditBook(${b.idBook})">✏️</button>
+                        <button class="action-button delete" title="Eliminar" onclick="deleteBook(${b.idBook})">🗑️</button>
+                    </td>
+                </tr>
+            `).join('');
+            currentBookPage = page;
+            renderPagination('bookPagination', booksData.length, page, 'changeBookPage');
+        }
+
+        function changeBookPage(page) {
+            renderBooksPage(page);
+        }
+
+        async function loadAuthorsSelect() {
+            if (authorsData.length > 0) {
+                const select = document.getElementById('bookAuthor');
+                select.innerHTML = authorsData.map(a => `<option value="${a.idAuthor}">${a.name}</option>`).join('');
+                return;
+            }
+            const resp = await fetch(`${API_BASE}/authors`);
+            if (!resp.ok) {
+                const errorText = await resp.text();
+                notify(errorText || 'Error al cargar autores para el selector', 'error');
+                return;
+            }
+            authorsData = await resp.json();
+            const select = document.getElementById('bookAuthor');
+            select.innerHTML = authorsData.map(a => `<option value="${a.idAuthor}">${a.name}</option>`).join('');
+        }
+
+        async function loadBooks() {
+            const resp = await fetch(`${API_BASE}/books`);
+            if (!resp.ok) {
+                const errorText = await resp.text();
+                notify(errorText || 'Error al cargar libros', 'error');
+                return;
+            }
+            booksData = await resp.json();
+            renderBooksPage(1);
+        }
+
+        function resetBookForm() {
+            document.getElementById('bookId').value = '';
+            document.getElementById('bookTitle').value = '';
+            document.getElementById('bookIsbn').value = '';
+            document.getElementById('bookYear').value = '';
+            document.getElementById('bookAuthor').selectedIndex = 0;
+            document.getElementById('bookSubmitButton').innerText = 'Registrar Libro';
+            document.getElementById('bookCancelButton').style.display = 'none';
+        }
+
+        function startEditBook(bookId) {
+            const book = booksData.find(b => b.idBook === bookId);
+            if (!book) return;
+            document.getElementById('bookId').value = book.idBook;
+            document.getElementById('bookTitle').value = book.title;
+            document.getElementById('bookIsbn').value = book.isbn;
+            document.getElementById('bookYear').value = book.year;
+            document.getElementById('bookAuthor').value = book.author?.idAuthor || '';
+            document.getElementById('bookSubmitButton').innerText = 'Guardar cambios';
+            document.getElementById('bookCancelButton').style.display = 'inline-block';
+        }
+
+        async function deleteBook(bookId) {
+            if (!confirm('¿Deseas eliminar este libro?')) return;
+            const resp = await fetch(`${API_BASE}/books?id=${bookId}`, {
+                method: 'DELETE'
+            });
+            if (resp.ok) {
+                notify('Libro eliminado correctamente');
+                if (document.getElementById('bookId').value == bookId) resetBookForm();
+                loadBooks();
+            } else {
+                const errorText = await resp.text();
+                notify(errorText || 'Error al eliminar libro', 'error');
+            }
+        }
+
+        document.getElementById('bookCancelButton').onclick = () => resetBookForm();
+
+        document.getElementById('bookForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const bookId = document.getElementById('bookId').value;
+            const data = {
+                idBook: bookId ? parseInt(bookId) : undefined,
+                title: document.getElementById('bookTitle').value,
+                isbn: document.getElementById('bookIsbn').value,
+                year: parseInt(document.getElementById('bookYear').value),
+                author: { idAuthor: parseInt(document.getElementById('bookAuthor').value) }
+            };
+            const method = bookId ? 'PUT' : 'POST';
+            const resp = await fetch(`${API_BASE}/books`, {
+                method,
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+            if (resp.ok) {
+                notify(bookId ? "Libro actualizado con éxito" : "Libro registrado con éxito");
+                resetBookForm();
+                loadBooks();
+            } else {
+                const errorText = await resp.text();
+                notify(errorText || (bookId ? "Error al actualizar libro" : "Error al registrar libro"), 'error');
+            }
+        };
+
+        async function loadUsers() {
+            const resp = await fetch(`${API_BASE}/users`);
+            if (!resp.ok) {
+                const errorText = await resp.text();
+                notify(errorText || 'Error al cargar usuarios', 'error');
+                return;
+            }
+            usersData = await resp.json();
+            renderUsersPage(1);
+        }
+
+        function renderUsersPage(page) {
+            const start = (page - 1) * ITEMS_PER_PAGE;
+            const pageUsers = usersData.slice(start, start + ITEMS_PER_PAGE);
+            const tbody = document.querySelector('#userTable tbody');
+            tbody.innerHTML = pageUsers.map(u => `
+                <tr>
+                    <td>${u.idUser}</td>
+                    <td>${u.name}</td>
+                    <td>${u.email}</td>
+                    <td>${u.phone}</td>
+                    <td>
+                        <button class="action-button delete" title="Eliminar" onclick="deleteUser(${u.idUser})">🗑️</button>
+                    </td>
+                </tr>
+            `).join('');
+            currentUserPage = page;
+            renderPagination('userPagination', usersData.length, page, 'changeUserPage');
+        }
+
+        function changeUserPage(page) {
+            renderUsersPage(page);
+        }
+
+        async function loadUsersSelect() {
+            if (usersData.length > 0) {
+                const select = document.getElementById('loanUser');
+                select.innerHTML = usersData.map(u => `<option value="${u.idUser}">${u.name}</option>`).join('');
+                return;
+            }
+            const resp = await fetch(`${API_BASE}/users`);
+            if (!resp.ok) {
+                const errorText = await resp.text();
+                notify(errorText || 'Error al cargar usuarios para el selector', 'error');
+                return;
+            }
+            usersData = await resp.json();
+            const select = document.getElementById('loanUser');
+            select.innerHTML = usersData.map(u => `<option value="${u.idUser}">${u.name}</option>`).join('');
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm('¿Deseas eliminar este usuario?')) return;
+            const resp = await fetch(`${API_BASE}/users?id=${userId}`, {
+                method: 'DELETE'
+            });
+            if (resp.ok) {
+                notify('Usuario eliminado correctamente');
+                loadUsers();
+                loadUsersSelect();
+            } else {
+                const errorText = await resp.text();
+                notify(errorText || 'Error al eliminar usuario', 'error');
+            }
+        }
+
+        async function loadLoans() {
+            const resp = await fetch(`${API_BASE}/loans`);
+            if (!resp.ok) {
+                const errorText = await resp.text();
+                notify(errorText || 'Error al cargar préstamos', 'error');
+                return;
+            }
+            loansData = await resp.json();
+            renderLoansPage(1);
+        }
+
+        function renderLoansPage(page) {
+            const start = (page - 1) * ITEMS_PER_PAGE;
+            const pageLoans = loansData.slice(start, start + ITEMS_PER_PAGE);
+            const tbody = document.querySelector('#loanTable tbody');
+            tbody.innerHTML = pageLoans.map(l => `
+                <tr>
+                    <td>${l.idLoan}</td>
+                    <td>${l.user?.name || ''}</td>
+                    <td>${l.book?.title || ''}</td>
+                    <td>${l.loanDate ? new Date(l.loanDate).toLocaleString() : ''}</td>
+                    <td>${l.returnDate ? new Date(l.returnDate).toLocaleString() : 'Pendiente'}</td>
+                    <td>
+                        <button class="action-button delete" title="Marcar devolución" onclick="returnLoan(${l.idLoan})">↩️</button>
+                    </td>
+                </tr>
+            `).join('');
+            currentLoanPage = page;
+            renderPagination('loanPagination', loansData.length, page, 'changeLoanPage');
+        }
+
+        function changeLoanPage(page) {
+            renderLoansPage(page);
+        }
+
+        document.getElementById('userForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('userName').value,
+                email: document.getElementById('userEmail').value,
+                phone: document.getElementById('userPhone').value
+            };
+            const resp = await fetch(`${API_BASE}/users`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+            if (resp.ok) {
+                notify('Usuario registrado con éxito');
+                document.getElementById('userForm').reset();
+                loadUsers();
+                loadUsersSelect();
+            } else {
+                const errorText = await resp.text();
+                notify(errorText || 'Error al registrar usuario', 'error');
+            }
+        };
+
+        document.getElementById('loanForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const data = {
+                user: { idUser: parseInt(document.getElementById('loanUser').value) },
+                book: { idBook: parseInt(document.getElementById('loanBook').value) }
+            };
+            const resp = await fetch(`${API_BASE}/loans`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+            if (resp.ok) {
+                notify('Préstamo registrado con éxito');
+                document.getElementById('loanForm').reset();
+                loadLoans();
+            } else {
+                const errorText = await resp.text();
+                notify(errorText || 'Error al registrar préstamo', 'error');
+            }
+        };
+
+        async function returnLoan(loanId) {
+            if (!confirm('¿Marcar devolución de este préstamo?')) return;
+            const resp = await fetch(`${API_BASE}/loans?id=${loanId}`, {
+                method: 'DELETE'
+            });
+            if (resp.ok) {
+                notify('Devolución registrada correctamente');
+                loadLoans();
+            } else {
+                const errorText = await resp.text();
+                notify(errorText || 'Error al devolver el libro', 'error');
+            }
+        }
+
+        // Carga inicial
+        loadAuthors();
+    </script>
+</body>
+</html>
