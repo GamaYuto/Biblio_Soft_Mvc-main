@@ -1,4 +1,4 @@
--- Script de creación de la base de datos local para Biblio_Soft_Mvc
+-- Script de creacion de la base de datos local para Biblio_Soft_Mvc
 -- Ejecutar en un servidor MySQL local.
 
 DROP DATABASE IF EXISTS library;
@@ -48,9 +48,17 @@ CREATE TABLE IF NOT EXISTS loans (
     ON DELETE RESTRICT
 );
 
+CREATE TABLE IF NOT EXISTS admin_users (
+  id_admin INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(50) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  full_name VARCHAR(150),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Datos de prueba: autores y libros
 INSERT INTO authors (name, nationality) VALUES
-  ('Gabriel García Márquez', 'Colombiano'),
+  ('Gabriel Garcia Marquez', 'Colombiano'),
   ('Isabel Allende', 'Chilena'),
   ('Mario Vargas Llosa', 'Peruano'),
   ('Jorge Luis Borges', 'Argentino'),
@@ -58,32 +66,32 @@ INSERT INTO authors (name, nationality) VALUES
   ('Pablo Neruda', 'Chileno'),
   ('Carlos Fuentes', 'Mexicano'),
   ('Laura Esquivel', 'Mexicana'),
-  ('Miguel de Cervantes', 'Español'),
-  ('Miguel Ángel Asturias', 'Guatemalteco'),
-  ('Julio Cortázar', 'Argentino'),
+  ('Miguel de Cervantes', 'Espanol'),
+  ('Miguel Angel Asturias', 'Guatemalteco'),
+  ('Julio Cortazar', 'Argentino'),
   ('Rosario Castellanos', 'Mexicana'),
-  ('Federico García Lorca', 'Español'),
-  ('J. K. Rowling', 'Británica'),
-  ('George Orwell', 'Británico'),
-  ('Jane Austen', 'Británica'),
+  ('Federico Garcia Lorca', 'Espanol'),
+  ('J. K. Rowling', 'Britanica'),
+  ('George Orwell', 'Britanico'),
+  ('Jane Austen', 'Britanica'),
   ('Mark Twain', 'Estadounidense'),
   ('Herman Melville', 'Estadounidense'),
-  ('Agatha Christie', 'Británica'),
+  ('Agatha Christie', 'Britanica'),
   ('Ernest Hemingway', 'Estadounidense');
 
 INSERT INTO books (title, isbn, year, id_author) VALUES
-  ('Cien años de soledad', '978-0439023528', 1967, 1),
-  ('La casa de los espíritus', '978-0061122415', 1982, 2),
+  ('Cien anos de soledad', '978-0439023528', 1967, 1),
+  ('La casa de los espiritus', '978-0061122415', 1982, 2),
   ('La ciudad y los perros', '978-0141184930', 1962, 3),
   ('El Aleph', '978-8432205248', 1949, 4),
   ('El laberinto de la soledad', '978-6071606981', 1950, 5),
-  ('Veinte poemas de amor y una canción desesperada', '978-0143106267', 1924, 6),
+  ('Veinte poemas de amor y una cancion desesperada', '978-0143106267', 1924, 6),
   ('La muerte de Artemio Cruz', '978-0307387044', 1962, 7),
   ('Como agua para chocolate', '978-0553272137', 1989, 8),
   ('Don Quijote de la Mancha', '978-8491050212', 1605, 9),
-  ('El Señor Presidente', '978-1400030400', 1946, 10),
+  ('El Senor Presidente', '978-1400030400', 1946, 10),
   ('Rayuela', '978-8499890947', 1963, 11),
-  ('Balún Canán', '978-6070707450', 1957, 12),
+  ('Balun Canan', '978-6070707450', 1957, 12),
   ('Bodas de sangre', '978-0142437463', 1933, 13),
   ('Harry Potter y la piedra filosofal', '978-8498380771', 1997, 14),
   ('1984', '978-0451524935', 1949, 15),
@@ -92,3 +100,9 @@ INSERT INTO books (title, isbn, year, id_author) VALUES
   ('Moby Dick', '978-0142437241', 1851, 18),
   ('Diez negritos', '978-8497595715', 1939, 19),
   ('El viejo y el mar', '978-0684801223', 1952, 20);
+
+-- Usuario administrador inicial
+-- username: admin
+-- password: Admin12345!
+INSERT INTO admin_users (username, password_hash, full_name) VALUES
+  ('admin', '$2a$12$Nbvkhxua7VpVY7owxdBeY.D9X43Gypci4gbajQo11YefVMKccN3Je', 'Administrador General');
