@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="true" %>
 <%@ page import="com.mycompany.biblio_soft_mvc.model.AdminUser" %>
 <%@ page import="com.mycompany.biblio_soft_mvc.servlet.LoginServlet" %>
 <%
@@ -85,11 +85,12 @@
     <script>
         const loginForm = document.getElementById('loginForm');
         const loginMessage = document.getElementById('loginMessage');
-        const contextPath = '<%= request.getContextPath() %>';
-        const loginEndpoint = `${contextPath}/resources/login`;
+        const appBasePath = '<%= request.getContextPath() %>';
+        const loginEndpoint = appBasePath + '/resources/login';
+        const homeEndpoint = appBasePath + '/index.jsp';
 
         function showMessage(message, type) {
-            loginMessage.innerHTML = `<div class="alert alert-${type} py-2 mb-0">${message}</div>`;
+            loginMessage.innerHTML = '<div class="alert alert-' + type + ' py-2 mb-0">' + message + '</div>';
         }
 
         async function checkActiveSession() {
@@ -101,7 +102,7 @@
             }
             const data = await resp.json();
             if (data.loggedIn) {
-                window.location.href = `${contextPath}/index.jsp`;
+                window.location.href = homeEndpoint;
             }
         }
 
@@ -125,7 +126,7 @@
 
             const data = await resp.json();
             if (resp.ok && data.success) {
-                window.location.href = data.redirect || `${contextPath}/index.jsp`;
+                window.location.href = data.redirect || homeEndpoint;
                 return;
             }
 

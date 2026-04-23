@@ -1,6 +1,7 @@
 package com.mycompany.biblio_soft_mvc.servlet;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,6 +11,7 @@ import java.io.IOException;
 /**
  * Cierra la sesion administrativa actual.
  */
+@WebServlet(name = "LogoutServlet", urlPatterns = {"/resources/logout", "/logout"})
 public class LogoutServlet extends HttpServlet {
 
     @Override

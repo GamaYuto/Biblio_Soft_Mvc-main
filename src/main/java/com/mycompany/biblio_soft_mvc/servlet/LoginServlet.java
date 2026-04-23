@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.mycompany.biblio_soft_mvc.model.AdminUser;
 import com.mycompany.biblio_soft_mvc.service.AuthService;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,6 +15,7 @@ import java.util.Map;
 /**
  * Controla el inicio de sesion del panel administrativo.
  */
+@WebServlet(name = "LoginServlet", urlPatterns = {"/resources/login", "/login"})
 public class LoginServlet extends HttpServlet {
 
     public static final String SESSION_ADMIN_USER = "adminUser";
