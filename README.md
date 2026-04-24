@@ -144,23 +144,114 @@ Si se usa el script incluido para administradores, el acceso inicial es:
 Se recomienda cambiar o reemplazar este usuario en ambientes reales.
 
 ## Estructura General del Proyecto
-
-```text
-src/main/java/com/mycompany/biblio_soft_mvc/
-  controller/
-  dao/
-  database/
-  filter/
-  model/
-  servlet/
-  service/
-  view/
-
-src/main/webapp/
-  WEB-INF/
-  view/
-  index.jsp
+**Generated:** 24/4/2026
 ```
+├── 📁 .github
+│   └── 📁 java-upgrade
+│       ├── 📁 20260414000935
+│       │   ├── 📁 logs
+│       │   ├── 📝 plan.md
+│       │   └── 📝 progress.md
+│       ├── 📁 hooks
+│       │   └── 📁 scripts
+│       │       ├── 📄 recordToolUse.ps1
+│       │       └── 📄 recordToolUse.sh
+│       └── ⚙️ .gitignore
+├── 📁 src
+│   └── 📁 main
+│       ├── 📁 java
+│       │   └── 📁 com
+│       │       └── 📁 mycompany
+│       │           └── 📁 biblio_soft_mvc
+│       │               ├── 📁 controller
+│       │               │   ├── ☕ AdminUserController.java
+│       │               │   ├── ☕ AuthorController.java
+│       │               │   ├── ☕ BookController.java
+│       │               │   ├── ☕ CategoryController.java
+│       │               │   ├── ☕ DashboardController.java
+│       │               │   ├── ☕ HistoryController.java
+│       │               │   ├── ☕ LoanController.java
+│       │               │   ├── ☕ ReservationController.java
+│       │               │   └── ☕ UserController.java
+│       │               ├── 📁 dao
+│       │               │   ├── ☕ AdminUserDAO.java
+│       │               │   ├── ☕ AuthorDAO.java
+│       │               │   ├── ☕ BookDAO.java
+│       │               │   ├── ☕ CategoryDAO.java
+│       │               │   ├── ☕ DashboardDAO.java
+│       │               │   ├── ☕ LoanDAO.java
+│       │               │   ├── ☕ ReservationDAO.java
+│       │               │   └── ☕ UserDAO.java
+│       │               ├── 📁 database
+│       │               │   └── ☕ ConnectionDB.java
+│       │               ├── 📁 filter
+│       │               │   └── ☕ AuthFilter.java
+│       │               ├── 📁 model
+│       │               │   ├── ☕ AdminUser.java
+│       │               │   ├── ☕ Author.java
+│       │               │   ├── ☕ AuthorMetric.java
+│       │               │   ├── ☕ Book.java
+│       │               │   ├── ☕ BookHistory.java
+│       │               │   ├── ☕ BookStatus.java
+│       │               │   ├── ☕ Category.java
+│       │               │   ├── ☕ DashboardMetrics.java
+│       │               │   ├── ☕ Loan.java
+│       │               │   ├── ☕ Reservation.java
+│       │               │   ├── ☕ ReservationStatus.java
+│       │               │   ├── ☕ User.java
+│       │               │   ├── ☕ UserActivityMetric.java
+│       │               │   └── ☕ UserHistory.java
+│       │               ├── 📁 service
+│       │               │   └── ☕ AuthService.java
+│       │               ├── 📁 servlet
+│       │               │   ├── ☕ AdminUserServlet.java
+│       │               │   ├── ☕ AuthorServlet.java
+│       │               │   ├── ☕ BookServlet.java
+│       │               │   ├── ☕ CategoryServlet.java
+│       │               │   ├── ☕ DashboardServlet.java
+│       │               │   ├── ☕ DbInfoServlet.java
+│       │               │   ├── ☕ LoanServlet.java
+│       │               │   ├── ☕ LoginServlet.java
+│       │               │   ├── ☕ LogoutServlet.java
+│       │               │   ├── ☕ ReservationServlet.java
+│       │               │   └── ☕ UserServlet.java
+│       │               ├── 📁 test
+│       │               │   ├── ☕ MainTest.java
+│       │               │   └── ☕ ServiceTest.java
+│       │               └── 📁 view
+│       │                   └── ☕ ViewPaths.java
+│       ├── 📁 resources
+│       │   ├── 📁 META-INF
+│       │   │   └── ⚙️ persistence.xml
+│       │   └── 📄 auth_admin_users.sql
+│       └── 📁 webapp
+│           ├── 📁 WEB-INF
+│           │   ├── 📁 jsp
+│           │   │   ├── 📄 footer.jsp
+│           │   │   └── 📄 header.jsp
+│           │   ├── ⚙️ beans.xml
+│           │   ├── ⚙️ glassfish-web.xml
+│           │   └── ⚙️ web.xml
+│           ├── 📁 view
+│           │   ├── 📄 admin-users.jsp
+│           │   ├── 📄 authors.jsp
+│           │   ├── 📄 books.jsp
+│           │   ├── 📄 loans.jsp
+│           │   ├── 📄 login.jsp
+│           │   ├── 📄 reservations.jsp
+│           │   └── 📄 users.jsp
+│           ├── 🌐 index.html
+│           └── 📄 index.jsp
+├── ⚙️ .gitignore
+├── 📝 README.md
+├── 📄 create_library_db.sql
+├── 📄 migration.sql
+├── ⚙️ nb-configuration.xml
+└── ⚙️ pom.xml
+```
+
+---
+*Generated by FileTree Pro Extension*
 
 ## Estado Actual
 
