@@ -64,6 +64,9 @@
             <li class="nav-item">
                 <a href="<%= request.getContextPath() %>/view/loans.jsp" class="nav-link"><i class="fa-solid fa-scroll me-2"></i>Prestamos</a>
             </li>
+            <li class="nav-item">
+                <a href="<%= request.getContextPath() %>/view/reservations.jsp" class="nav-link"><i class="fa-solid fa-bookmark me-2"></i>Reservas</a>
+            </li>
         </ul>
         <div class="pt-3 border-top border-secondary mt-3">
             <div class="small text-white-50 px-3 mb-2"><i class="fa-solid fa-user-shield me-2"></i><%= displayName %></div>
@@ -96,6 +99,9 @@
             </li>
             <li class="nav-item">
                 <a href="<%= request.getContextPath() %>/view/loans.jsp" class="nav-link text-white"><i class="fa-solid fa-scroll me-2"></i>Prestamos</a>
+            </li>
+            <li class="nav-item">
+                <a href="<%= request.getContextPath() %>/view/reservations.jsp" class="nav-link text-white"><i class="fa-solid fa-bookmark me-2"></i>Reservas</a>
             </li>
         </ul>
         <hr class="border-secondary">

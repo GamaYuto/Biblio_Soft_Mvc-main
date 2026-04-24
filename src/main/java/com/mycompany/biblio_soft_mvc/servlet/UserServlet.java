@@ -2,7 +2,9 @@ package com.mycompany.biblio_soft_mvc.servlet;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.mycompany.biblio_soft_mvc.controller.HistoryController;
 import com.mycompany.biblio_soft_mvc.controller.UserController;
+import com.mycompany.biblio_soft_mvc.model.UserHistory;
 import com.mycompany.biblio_soft_mvc.model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,6 +12,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -21,6 +26,7 @@ public class UserServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private final UserController userController = new UserController();
+    private final HistoryController historyController = new HistoryController();
     private final Gson gson = new Gson();
 
     /**
@@ -30,11 +36,63 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json;charset=UTF-8");
         try {
+            if ("true".equalsIgnoreCase(req.getParameter("history"))) {
+                int idUser = parseHistoryId(req, "idUser");
+                if (idUser <= 0) {
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    resp.getWriter().write(gson.toJson(new ErrorResponse("El ID del usuario es obligatorio para consultar historial.")));
+                    return;
+                }
+
+                Date dateFrom = parseDate(req.getParameter("dateFrom"));
+                Date dateTo = parseDate(req.getParameter("dateTo"));
+                UserHistory history = historyController.getUserHistory(
+                        idUser,
+                        dateFrom,
+                        dateTo,
+                        req.getParameter("loanStatus"),
+                        req.getParameter("reservationStatus")
+                );
+                if (history == null) {
+                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    resp.getWriter().write(gson.toJson(new ErrorResponse("No se encontro el usuario solicitado.")));
+                    return;
+                }
+                resp.getWriter().write(gson.toJson(history));
+                return;
+            }
             resp.getWriter().write(gson.toJson(userController.listUsers()));
+        } catch (ParseException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().write(gson.toJson(new ErrorResponse("Formato de fecha invalido. Use yyyy-MM-dd.")));
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write(gson.toJson(new ErrorResponse("Error al cargar usuarios: " + e.getMessage())));
         }
+    }
+
+    private int parseHistoryId(HttpServletRequest req, String primaryParam) {
+        String idValue = req.getParameter(primaryParam);
+        if (idValue == null || idValue.isBlank()) {
+            idValue = req.getParameter("id");
+        }
+        if (idValue == null || idValue.isBlank()) {
+            return -1;
+        }
+        try {
+            return Integer.parseInt(idValue);
+        } catch (NumberFormatException ex) {
+            return -1;
+        }
+    }
+
+    private Date parseDate(String value) throws ParseException {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        format.setLenient(false);
+        return format.parse(value);
     }
 
     /**

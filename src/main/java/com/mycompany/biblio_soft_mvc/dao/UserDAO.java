@@ -71,6 +71,31 @@ public class UserDAO {
         return users;
     }
 
+    public User findById(int idUser) {
+        String sql = "SELECT * FROM users WHERE id_user = ?";
+        Connection conn = ConnectionDB.connect();
+        if (conn == null) {
+            System.out.println("Error: No se pudo establecer conexión con la base de datos.");
+            return null;
+        }
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idUser);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new User(
+                            rs.getInt("id_user"),
+                            rs.getString("name"),
+                            rs.getString("email"),
+                            rs.getString("phone")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al buscar usuario por ID: " + e.getMessage());
+        }
+        return null;
+    }
+
     /**
      * Elimina un usuario por su ID.
      * @param idUser Identificador del usuario.

@@ -34,6 +34,10 @@ public class UserController {
         return userDAO.getAllUsers();
     }
 
+    public User findUserById(int idUser) {
+        return userDAO.findById(idUser);
+    }
+
     /**
      * Actualiza la información de un usuario.
      * @param idUser Identificador del usuario.
